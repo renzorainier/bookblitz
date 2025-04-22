@@ -8,7 +8,7 @@ import { doc, onSnapshot } from 'firebase/firestore';
 import success from './success.wav';
 import CreatePost from './CreatePost';
 import Profile from './Profile';
-import Feed from './Feed';
+import SortingGame from './SortingGame';
 import Navbar from './Navbar'; // Import the refactored Navbar component
 import Search from './Search'
 
@@ -74,16 +74,16 @@ export default function Main() {
         return <CreatePost userData={userData} />;
         case 'search':
           return <Search userData={userData} postData={postData}  />;
-      case 'feed':
+      case 'sort':
       default:
-        return <Feed postData={postData} userData={userData} />;
+        return <SortingGame postData={postData} userData={userData} />;
     }
   };
 
   return (
     <main className="min-h-screen bg-gray-100 relative">
       {/* Navbar */}
-      <Navbar activeComponent={activeComponent} setActiveComponent={setActiveComponent} />
+      {/* <Navbar activeComponent={activeComponent} setActiveComponent={setActiveComponent} /> */}
 
       {/* Active Component */}
       <section className={`${activeComponent === 'feed' ? 'pt-16' : ''}`}>{renderComponent()}</section>
