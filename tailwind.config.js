@@ -15,6 +15,8 @@ module.exports = {
       fontFamily: {
         'roboto-mono': ['Roboto Mono', 'monospace'],
         'inter': ['Inter', 'sans-serif'],
+        'pixelify': ['"Pixelify Sans"', 'sans-serif'],
+        'tiny': ['Tiny5', 'cursive'], // make sure Tiny5 is loaded via <link> in <head>
       },
     },
   },

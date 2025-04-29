@@ -1,9 +1,8 @@
-
-
 import "./globals.css";
-import { Urbanist } from 'next/font/google'
+import { Pixelify_Sans } from 'next/font/google';
 import { Analytics } from '@vercel/analytics/react';
-const inter = Urbanist({ subsets: ['latin'] })
+
+const pixelifySans = Pixelify_Sans({ subsets: ['latin'] });
 
 export const metadata = {
   title: "KommUnity",
@@ -13,8 +12,10 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={inter.className} >{children}</body>
-      <Analytics />
+      <body className={pixelifySans.className}>
+        {children}
+        <Analytics />
+      </body>
     </html>
   );
 }
