@@ -36,7 +36,20 @@ const SortingGame = ({ userData: initialUserData }) => {
     useState(false);
   const [isLevelComplete, setIsLevelComplete] = useState(false);
   const scoreMotionValue = useMotionValue(score);
-  const bookMotionValues = useRef(array.map(() => useMotionValue(0))).current;
+  const bookMotionValues = useRef([
+    useMotionValue(0),
+    useMotionValue(0),
+    useMotionValue(0),
+    useMotionValue(0),
+    useMotionValue(0),
+    useMotionValue(0),
+    useMotionValue(0),
+    useMotionValue(0),
+    useMotionValue(0),
+    useMotionValue(0),
+    useMotionValue(0),
+    useMotionValue(0),
+  ]).current;
   const [invalidMove, setInvalidMove] = useState(false);
   const [isLampOn, setIsLampOn] = useState(true);
   const [lampIntensity, setLampIntensity] = useState(0);
@@ -413,51 +426,49 @@ const SortingGame = ({ userData: initialUserData }) => {
         timeStreak={timeStreak}
         streakTimer={streakTimer}
         streakProgress={streakProgress}
-      />
-      <div className="w-3/4 p-6 relative z-30">
-        <Lamp isOn={isLampOn} position="left" />
-        <Lamp isOn={isLampOn} position="right" />
-        <TimeProgressBar timeLeft={timeLeft} />
-        <GameComment comment={comment} />
-        <div className="relative flex justify-center items-end mt-10 mx-auto px-4">
-          <BookShelf
-            array={array}
-            selectedIndex={selectedIndex}
-            isLevelCompleteAnimating={isLevelCompleteAnimating}
-            bookMotionValues={bookMotionValues}
-            onBookClick={handleBookClick}
+        />
+        <div className="w-3/4 p-6 relative z-30">
+          <Lamp isOn={isLampOn} position="left" />
+          <Lamp isOn={isLampOn} position="right" />
+          <TimeProgressBar timeLeft={timeLeft} />
+          <GameComment comment={comment} />
+          <div className="relative flex justify-center items-end mt-10 mx-auto px-4">
+            <BookShelf
+              array={array}
+              selectedIndex={selectedIndex}
+              isLevelCompleteAnimating={isLevelCompleteAnimating}
+              bookMotionValues={bookMotionValues}
+              onBookClick={handleBookClick}
+            />
+          </div>
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[-200%] z-50 flex flex-col gap-4 items-center justify-center">
+            <PowerUpButton
+              sorterUses={sorterUses}
+              gameOver={gameOver}
+              onUseSorter={useSorter}
+            />
+            <RestartButton gameOver={gameOver} onRestart={resetGame} />
+          </div>
+        </div>
+        <div className="w-1/4 p-4 flex items-center justify-center z-30">
+          <Scoreboard
+            timeLeft={timeLeft}
+            score={score}
+            totalPlayTime={totalPlayTime}
           />
         </div>
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[-200%] z-50 flex flex-col gap-4 items-center justify-center">
-          <PowerUpButton
-            sorterUses={sorterUses}
-            gameOver={gameOver}
-            onUseSorter={useSorter}
-          />
-          <RestartButton gameOver={gameOver} onRestart={resetGame} />
-        </div>
-      </div>
-      <div className="w-1/4 p-4 flex items-center justify-center z-30">
-        <Scoreboard
-          timeLeft={timeLeft}
-          score={score}
-          totalPlayTime={totalPlayTime}
+        <Image
+          src={backgroundImage}
+          alt="Game Background"
+          className="absolute inset-0 z-0 w-full h-full"
+          style={{ objectFit: "contain", opacity: 0 }}
+          priority
         />
       </div>
-      <Image
-        src={backgroundImage}
-        alt="Game Background"
-        className="absolute inset-0 z-0 w-full h-full"
-        style={{ objectFit: "contain", opacity: 0 }}
-        priority
-      />
-    </div>
-  );
-};
+    );
+  };
 
-export default SortingGame;
-
-
+  export default SortingGame;
 
 
 
