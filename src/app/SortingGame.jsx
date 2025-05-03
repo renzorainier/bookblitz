@@ -12,7 +12,9 @@ import PowerUpButton from "./PowerUpButton";
 import RestartButton from "./RestartButton";
 import StreakDisplay from "./StreakDisplay";
 import Lamp from "./Lamp";
-
+import selectSound from './/sounds/pickup.wav'; // Import the sound effect
+import moveSound from './/sounds/swoosh.wav';
+import winSound from './/sounds/win.wav';
 const getRandomArray = (size) =>
   Array.from({ length: size }, (_, i) => i + 1).sort(() => Math.random() - 0.5);
 
@@ -54,6 +56,16 @@ const SortingGame = ({ userData: initialUserData }) => {
   const [isLampOn, setIsLampOn] = useState(true);
   const [lampIntensity, setLampIntensity] = useState(0);
   const [blinksThisLevel, setBlinksThisLevel] = useState(0);
+  const selectSoundRef = useRef(null);
+  const moveSoundRef = useRef(null); // Ref for the move sound
+  const winSoundRef = useRef(null); // Ref for the move sound
+
+
+  useEffect(() => {
+    selectSoundRef.current = new Audio(selectSound);
+    moveSoundRef.current = new Audio(moveSound);
+    winSoundRef.current = new Audio(winSound);
+  }, []);
 
   const resetGame = useCallback(() => {
     setArray(getRandomArray(12));
@@ -204,6 +216,9 @@ const SortingGame = ({ userData: initialUserData }) => {
     if (current < left) {
       [newArray[selectedIndex], newArray[selectedIndex - 1]] = [left, current];
       setArray(newArray);
+      if (moveSoundRef.current) {
+        moveSoundRef.current.play().catch(error => console.error("Error playing move sound:", error));
+      }
 
       const newSelectedIndex = selectedIndex - 1;
       setSelectedIndex(newSelectedIndex);
@@ -236,7 +251,6 @@ const SortingGame = ({ userData: initialUserData }) => {
       } else {
         setComment(`Moved Book ${current} left`);
       }
-
       if (isSorted(newArray)) {
         setComment("🎉 Sorted! Level complete!");
         setTimeLeft((prev) => Math.min(prev + 15, 60));
@@ -249,6 +263,9 @@ const SortingGame = ({ userData: initialUserData }) => {
         setSelectedIndex(null);
         setInvalidMove(false);
         setTimeout(() => setIsLevelCompleteAnimating(false), 1000);
+        if (winSoundRef.current) {
+          winSoundRef.current.play().catch(error => console.error("Error playing win sound:", error));
+        }
       }
     } else {
       setComment("Invalid move! Only move smaller books left.");
@@ -274,6 +291,7 @@ const SortingGame = ({ userData: initialUserData }) => {
     setStreakTimer,
     setInvalidMove,
     isSorted,
+    moveSoundRef, // Add moveSoundRef to the dependency array
   ]);
 
   useEffect(() => {
@@ -387,7 +405,6 @@ const SortingGame = ({ userData: initialUserData }) => {
     setInvalidMove,
     bookMotionValues,
   ]);
-
   const useSorter = useCallback(() => {
     if (gameOver || sorterUses <= 0) {
       setComment(gameOver ? "Game Over!" : "No Sorters left!");
@@ -400,11 +417,14 @@ const SortingGame = ({ userData: initialUserData }) => {
 
   const handleBookClick = useCallback(
     (index) => {
-      if (!gameOver) {
+      if (!gameOver && index !== selectedIndex) {
         setSelectedIndex(index);
+        if (selectSoundRef.current) { // <---- Use selectSoundRef.current
+          selectSoundRef.current.play().catch(error => console.error("Error playing sound:", error));
+        }
       }
     },
-    [gameOver, setSelectedIndex]
+    [gameOver, setSelectedIndex, selectedIndex]
   );
 
   return (
@@ -426,49 +446,67 @@ const SortingGame = ({ userData: initialUserData }) => {
         timeStreak={timeStreak}
         streakTimer={streakTimer}
         streakProgress={streakProgress}
-        />
-        <div className="w-3/4 p-6 relative z-2">
-          <Lamp isOn={isLampOn} position="left" />
-          <Lamp isOn={isLampOn} position="right" />
-          <TimeProgressBar timeLeft={timeLeft} />
-          <GameComment comment={comment} />
-          <div className="relative flex justify-center items-end mt-10 mx-auto px-4">
-            <BookShelf
-              array={array}
-              selectedIndex={selectedIndex}
-              isLevelCompleteAnimating={isLevelCompleteAnimating}
-              bookMotionValues={bookMotionValues}
-              onBookClick={handleBookClick}
-            />
-          </div>
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[-200%] z-50 flex flex-col gap-4 items-center justify-center">
-            <PowerUpButton
-              sorterUses={sorterUses}
-              gameOver={gameOver}
-              onUseSorter={useSorter}
-            />
-            <RestartButton gameOver={gameOver} onRestart={resetGame} />
-          </div>
-        </div>
-        <div className="w-1/4 p-4 flex items-center justify-center z-30">
-          <Scoreboard
-            timeLeft={timeLeft}
-            score={score}
-            totalPlayTime={totalPlayTime}
+      />
+      <div className="w-3/4 p-6 relative z-2">
+        <Lamp isOn={isLampOn} position="left" />
+        <Lamp isOn={isLampOn} position="right" />
+        <TimeProgressBar timeLeft={timeLeft} />
+        <GameComment comment={comment} />
+        <div className="relative flex justify-center items-end mt-10 mx-auto px-4">
+          <BookShelf
+            array={array}
+            selectedIndex={selectedIndex}
+            isLevelCompleteAnimating={isLevelCompleteAnimating}
+            bookMotionValues={bookMotionValues}
+            onBookClick={handleBookClick}
           />
         </div>
-        <Image
-          src={backgroundImage}
-          alt="Game Background"
-          className="absolute inset-0 z-0 w-full h-full"
-          style={{ objectFit: "contain", opacity: 0 }}
-          priority
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[-200%] z-50 flex flex-col gap-4 items-center justify-center">
+          <PowerUpButton
+            sorterUses={sorterUses}
+            gameOver={gameOver}
+            onUseSorter={useSorter}
+          />
+          <RestartButton gameOver={gameOver} onRestart={resetGame} />
+        </div>
+      </div>
+      <div className="w-1/4 p-4 flex items-center justify-center z-30">
+        <Scoreboard
+          timeLeft={timeLeft}
+          score={score}
+          totalPlayTime={totalPlayTime}
         />
       </div>
-    );
-  };
+      <Image
+        src={backgroundImage}
+        alt="Game Background"
+        className="absolute inset-0 z-0 w-full h-full"
+        style={{ objectFit: "contain", opacity: 0 }}
+        priority
+      />
+    </div>
+  );
+};
 
-  export default SortingGame;
+export default SortingGame;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
