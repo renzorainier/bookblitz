@@ -5,8 +5,8 @@ import { Analytics } from '@vercel/analytics/react';
 const pixelifySans = Pixelify_Sans({ subsets: ['latin'] });
 
 export const metadata = {
-  title: "KommUnity",
-  description: "KommUnity",
+  title: "BookBlitz",
+  description: "BookBlitz",
 };
 
 export default function RootLayout({ children }) {
