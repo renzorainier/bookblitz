@@ -46,23 +46,23 @@ const BookItem = ({
       }`}
       onClick={() => onBookClick(index)}
     >
-      {selectedIndex === index && (
-        <motion.div
-          className="absolute top-[-130px] left-[calc(50%+30px)] -translate-x-1/2 w-24 h-24 z-20 flex justify-center"
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -20 }}
-          transition={{ duration: 0.2 }}
-        >
-          <Image
-            src={Arrow}
-            alt="Selector"
-            width={96}
-            height={96}
-            style={{ imageRendering: "pixelated" }}
-          />
-        </motion.div>
-      )}
+   {selectedIndex === index && (
+  <motion.div
+    className="absolute top-[-130px] -left-[30%] -translate-x-1/2 w-24 h-24 z-20 flex justify-center"
+    initial={{ opacity: 0, y: -20 }}
+    animate={{ opacity: 1, y: 0 }}
+    exit={{ opacity: 0, y: -20 }}
+    transition={{ duration: 0.2 }}
+  >
+    <Image
+      src={Arrow}
+      alt="Selector"
+      width={96}
+      height={96}
+      style={{ imageRendering: "pixelated" }}
+    />
+  </motion.div>
+)}
       <Image
         src={bookImages[value]}
         alt={`Book ${value}`}

@@ -409,7 +409,7 @@ const SortingGame = ({ userData: initialUserData }) => {
 
   return (
     <div
-      className="flex min-h-screen relative"
+      className="flex min-h-screen relative "
       style={{
         backgroundImage: `url(${backgroundImage.src})`,
         backgroundRepeat: "repeat",
@@ -427,7 +427,7 @@ const SortingGame = ({ userData: initialUserData }) => {
         streakTimer={streakTimer}
         streakProgress={streakProgress}
         />
-        <div className="w-3/4 p-6 relative z-30">
+        <div className="w-3/4 p-6 relative z-2">
           <Lamp isOn={isLampOn} position="left" />
           <Lamp isOn={isLampOn} position="right" />
           <TimeProgressBar timeLeft={timeLeft} />

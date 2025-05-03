@@ -7,8 +7,8 @@ import lampOffImage from "./lamp_off.png";
 const Lamp = ({ isOn, position }) => {
   const style =
     position === "left"
-      ? { top: -40, left: -20 }
-      : { top: -40, right: -20 };
+      ? { top: -40, left: -70 }
+      : { top: -40, right: -70 };
 
   return (
     <div className={`absolute z-40 pointer-events-none`} style={style}>

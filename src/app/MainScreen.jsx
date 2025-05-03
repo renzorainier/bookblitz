@@ -51,7 +51,7 @@ const MainScreen = ({ userData }) => {
             style={{ ...pixelatedButtonStyle, padding: '1rem 2rem', fontSize: '1.3rem', border: '2px solid #b87729', boxShadow: '2px 2px 0 #b87729, 4px 4px 0 #935b1a' }}
             onMouseEnter={(e) => Object.assign(e.target.style, pixelatedButtonHoverStyle)}
             onMouseLeave={(e) => Object.assign(e.target.style, pixelatedButtonStyle)}
-            className="fixed bottom-6 left-6 text-white font-bold transition duration-300 ease-in-out z-70" // Adjusted positioning slightly
+            className="fixed bottom-6 left-6 text-white font-bold transition duration-300 ease-in-out z-999" // Increased zIndex
           >
             Back
           </button>
@@ -72,7 +72,7 @@ const MainScreen = ({ userData }) => {
             style={{ ...pixelatedButtonStyle, padding: '1rem 2rem', fontSize: '1.3rem', border: '2px solid #b87729', boxShadow: '2px 2px 0 #b87729, 4px 4px 0 #935b1a' }}
             onMouseEnter={(e) => Object.assign(e.target.style, pixelatedButtonHoverStyle)}
             onMouseLeave={(e) => Object.assign(e.target.style, pixelatedButtonStyle)}
-            className="fixed bottom-6 left-6 text-white font-bold transition duration-300 ease-in-out z-100" // Adjusted positioning slightly
+            className="fixed bottom-6 left-6 text-white font-bold transition duration-300 ease-in-out z-999" // Increased zIndex
           >
             Back
           </button>
