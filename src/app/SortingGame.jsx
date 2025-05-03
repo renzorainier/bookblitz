@@ -1,9 +1,8 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import {
   motion,
   AnimatePresence,
   useMotionValue,
-  useSpring,
   animate,
 } from "framer-motion";
 import Image from "next/image";
@@ -38,11 +37,11 @@ const SortingGame = ({ userData: initialUserData }) => {
   const [streakTimer, setStreakTimer] = useState(0);
   const [userData, setUserData] = useState(initialUserData); // Local state for user data
   const streakProgress = useMotionValue(0);
-  const spring = { type: "spring", stiffness: 100, damping: 10 };
+  const spring = useMemo(() => ({ type: "spring", stiffness: 100, damping: 10 }), []);
   const [isLevelCompleteAnimating, setIsLevelCompleteAnimating] = useState(false);
   const [isLevelComplete, setIsLevelComplete] = useState(false);
   const scoreMotionValue = useMotionValue(score); // Motion value for score animation
-  const bookMotionValues = array.map(() => useMotionValue(0));
+  const bookMotionValues = useMemo(() => array.map(() => useMotionValue(0)), [array]);
   const [invalidMove, setInvalidMove] = useState(false);
   const [isLampOn, setIsLampOn] = useState(true); // Default to true
   const [lampIntensity, setLampIntensity] = useState(0); // For dimming effect
@@ -79,7 +78,7 @@ const SortingGame = ({ userData: initialUserData }) => {
       setInvalidMove(false);
       setBlinksThisLevel(0); // Reset blink count for the new level
     }
-  }, [isLevelCompleteAnimating, isLevelComplete]);
+  }, [isLevelCompleteAnimating, isLevelComplete, bookMotionValues]);
 
   useEffect(() => {
     streakProgress.set((streakTimer / 2) * 100);
@@ -186,8 +185,10 @@ const SortingGame = ({ userData: initialUserData }) => {
     }
   }, [gameOver, updateGameData]);
 
-  const checkSorted = (arr) =>
-    arr.every((val, i, a) => i === 0 || a[i - 1] <= val);
+  const checkSorted = useCallback(
+    (arr) => arr.every((val, i, a) => i === 0 || a[i - 1] <= val),
+    []
+  );
 
   const moveElementLeft = useCallback(() => {
     if (gameOver || selectedIndex === null || selectedIndex === 0) return;
