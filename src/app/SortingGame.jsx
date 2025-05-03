@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from "react";
+import React, { useState, useEffect, useMemo, useCallback, useRef } from "react";
 import { motion, useMotionValue, animate } from "framer-motion";
 import Image from "next/image";
 import backgroundImage from "./back.png";
@@ -31,7 +31,7 @@ const SortingGame = ({ userData: initialUserData }) => {
   const [streakTimer, setStreakTimer] = useState(0);
   const [userData, setUserData] = useState(initialUserData);
   const streakProgress = useMotionValue(0);
-  const spring = { type: "spring", stiffness: 100, damping: 10 };
+  const spring = useMemo(() => ({ type: "spring", stiffness: 100, damping: 10 }), []);
   const [isLevelCompleteAnimating, setIsLevelCompleteAnimating] =
     useState(false);
   const [isLevelComplete, setIsLevelComplete] = useState(false);
