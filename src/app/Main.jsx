@@ -8,6 +8,8 @@ import { doc, getDoc } from 'firebase/firestore'; // Import getDoc instead of on
 import success from './success.wav';
 import SortingGame from './SortingGame';
 import Navbar from './Navbar'; // Import the refactored Navbar component
+import MainScreen from './MainScreen'; // Import the refactored Navbar component
+
 
 export default function Main() {
   const [user, loading, error] = useAuthState(auth);
@@ -71,7 +73,7 @@ export default function Main() {
   const renderComponent = () => {
     switch (activeComponent) {
       default:
-        return <SortingGame postData={postData} userData={userData} />;
+        return <MainScreen postData={postData} userData={userData} />;
     }
   };
 
@@ -81,7 +83,7 @@ export default function Main() {
       {/* <Navbar activeComponent={activeComponent} setActiveComponent={setActiveComponent} /> */}
 
       {/* Active Component */}
-      <section className={`${activeComponent === 'feed' ? '' : ''}`}>{renderComponent()}</section>
+      <section >{renderComponent()}</section>
     </main>
   );
 }

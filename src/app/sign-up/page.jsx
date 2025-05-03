@@ -6,13 +6,11 @@ import { useRouter } from "next/navigation";
 import { auth, db } from "@/app/firebase/config";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
-import teen from "../img.png";
-import logo from "./search.png";
+import backgroundImg from "./back.png"; // Book Blitz background
+import simple from "./simple.png"; // Book Blitz logo
 
 const Register = () => {
-  const [formData, setFormData] = useState({
-    playerName: "",
-  });
+  const [formData, setFormData] = useState({ playerName: "" });
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
@@ -26,13 +24,17 @@ const Register = () => {
       const playerName = user.displayName || "";
 
       const userRef = doc(db, "users", user.uid);
-      await setDoc(userRef, {
-        playerName: playerName,
-        highScore: 0,
-        totalPlaytime: 0,
-        highScorePlaytime: 0,
-        userID: user.uid,
-      }, { merge: true });
+      await setDoc(
+        userRef,
+        {
+          playerName,
+          highScore: 0,
+          totalPlaytime: 0,
+          highScorePlaytime: 0,
+          userID: user.uid,
+        },
+        { merge: true }
+      );
 
       alert("Registration complete! Welcome, " + playerName);
       router.push("/");
@@ -52,7 +54,6 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-
     try {
       const user = auth.currentUser;
       if (!user) throw new Error("User is not authenticated");
@@ -61,7 +62,7 @@ const Register = () => {
 
       const userRef = doc(db, "users", user.uid);
       await setDoc(userRef, {
-        playerName: playerName,
+        playerName,
         highScore: 0,
         totalPlaytime: 0,
         highScorePlaytime: 0,
@@ -80,109 +81,147 @@ const Register = () => {
 
   const isFormComplete = formData.playerName;
 
+  const pixelatedButtonStyle = {
+    backgroundColor: "#dc9844",
+    color: "white",
+    fontWeight: "bold",
+    padding: "1.5rem 3rem",
+    borderRadius: "0",
+    boxShadow: "4px 4px 0 #b87729, 8px 8px 0 #935b1a",
+    transition: "box-shadow 0.2s ease-in-out",
+    fontSize: "1.8rem",
+    border: "4px solid #b87729",
+  };
+
+  const pixelatedButtonHoverStyle = {
+    boxShadow: "2px 2px 0 #b87729",
+    backgroundColor: "#e6a854",
+    borderColor: "#e6a854",
+  };
+
+  const pixelatedButtonActiveStyle = {
+    boxShadow: "1px 1px 0 #935b1a",
+    transform: "translate(2px, 2px)",
+  };
+
   return (
     <>
       {!auth.currentUser ? (
-        // Initial Sign-Up View
-
-        <div className="min-h-screen flex flex-col items-center justify-between bg-[#F8FBFF] px-6 py-10">
-          {/* Logo Section */}
-          <div className="flex flex-col items-center mb-10">
-            <Image src={teen} width={220} height={200} alt="KommUnity Logo" />
-            <h1 className="text-4xl md:text-6xl font-bold text-gray-700 mt-4">KommUnity</h1>
+        // Initial Google Sign-Up UI (unchanged)
+        <div
+          className="min-h-screen flex flex-col items-center justify-center px-6 py-2 bg-repeat"
+          style={{
+            backgroundImage: `url(${backgroundImg.src})`,
+            backgroundPosition: "center",
+          }}>
+          {/* Centered BookBlitz Logo */}
+          <div className="absolute inset-0 z-0 flex items-center justify-center pointer-events-none">
+            <div className="relative w-[70vw] h-auto">
+              <Image
+                src={simple}
+                alt="Simple Image"
+                width={0}
+                height={0}
+                className="object-contain object-center w-full h-auto"
+              />
+            </div>
           </div>
 
-          {/* Sign Up Header */}
-          <div className="w-full flex flex-col items-center md:items-start px-6 md:px-8 mb-6">
-            <h2 className="text-2xl font-extrabold text-gray-700 mb-2">Sign Up</h2>
-            <p className="text-gray-600 text-sm text-center md:text-left">
-              By continuing, you are agreeing to our{" "}
-              <a href="/terms" className="text-blue-500 hover:underline">
-                Terms of Service
-              </a>{" "}
-              and{" "}
-              <a href="/privacy" className="text-blue-500 hover:underline">
-                Privacy Policy
-              </a>.
-            </p>
-          </div>
-
-          {/* Google Sign-up Button */}
-          <div className="w-full flex justify-center mt-6">
+          {/* Google Sign-Up Button */}
+          <div className="w-full flex justify-center mt-8 relative z-10">
             <button
               onClick={handleGoogleSignIn}
-              className="w-[350px] md:w-[400px] flex items-center justify-center py-3 bg-white text-gray-800 border border-gray-300 rounded-full shadow-md hover:bg-[#F8FBFF] font-roboto-mono"
-              disabled={loading}
-            >
-              <Image
-                src={logo}
-                width={20}
-                height={20}
-                alt="Google Icon"
-                className="mr-2"
-              />
-              {loading ? "Signing up with Google..." : "Continue with Google"}
+              style={pixelatedButtonStyle}
+              onMouseEnter={(e) =>
+                Object.assign(e.target.style, pixelatedButtonHoverStyle)
+              }
+              onMouseLeave={(e) =>
+                Object.assign(e.target.style, pixelatedButtonStyle)
+              }
+              className="w-[80vw] max-w-md flex items-center justify-center py-6 text-white border-gray-300 rounded-lg shadow-xl transform hover:scale-105 transition duration-200 ease-in-out text-lg font-bold"
+              disabled={loading}>
+              {loading ? "Signing Up..." : "Sign up with Google"}
             </button>
           </div>
 
-          {/* Footer Section */}
-          <div className="text-center mt-6">
-            <p className="text-gray-600 text-sm font-roboto-mono">
+          {/* Footer */}
+          <div className="w-full flex justify-center items-center mt-12 mb-4 relative z-10">
+            <p className="text-yellow-300 text-lg text-center md:text-center">
               Already have an account?{" "}
-              <a href="/sign-in" className="text-blue-500 hover:underline">
+              <a href="/sign-in" className="hover:underline">
                 Log In
               </a>
             </p>
           </div>
         </div>
-
       ) : (
-        // Registration Form
-        <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center px-4 py-8">
-          {/* Logo Section */}
-          <div className="flex flex-center items-center mb-8">
+        // After Google Sign-In — centered form inside Book Blitz logo
+        <div
+          className="min-h-screen flex items-center justify-center px-4 py-8 bg-repeat"
+          style={{
+            backgroundImage: `url(${backgroundImg.src})`,
+            backgroundPosition: "center",
+          }}>
+          {/* Container with logo as background/frame */}
+          <div className="relative w-[200vw] max-w-6xl aspect-[3/2]">
+            {/* Book Blitz Image as Container */}
             <Image
-              src={teen}
-              alt="KommUnity Logo"
-              width={100}
-              height={40}
+              src={simple}
+              alt="Book Blitz Logo"
+              fill
+              className="object-contain"
             />
-            <h1 className="text-5xl font-bold text-gray-800 mt-4">KommUnity</h1>
-          </div>
 
-          {/* Form Section */}
-          <form onSubmit={handleSubmit} className="w-full max-w-md space-y-6">
-            <h2 className="text-3xl font-bold text-gray-800 text-left">
-              Sign Up
-            </h2>
+            {/* Form Centered Inside Logo Container */}
+            <div className="absolute left-0 right-0 top-[35%] flex justify-center p-3">
+              <form
+                onSubmit={handleSubmit}
+                className="w-full max-w-md bg-transparent shadow-none p-0 space-y-6">
+                <h2 className="text-4xl font-bold text-yellow-400 text-center mb-5">
+                  Sign Up
+                </h2>
 
-            {/* Player Name */}
-            <div>
-              <label
-                htmlFor="playerName"
-                className="block text-sm font-semibold text-gray-700">
-                Player Name <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                id="playerName"
-                placeholder="Enter your player name"
-                value={formData.playerName}
-                onChange={handleInputChange}
-                required
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 mt-1 text-sm focus:ring focus:ring-blue-500 focus:outline-none"
-              />
+                <div>
+                  <label
+                    htmlFor="playerName"
+                    className="block text-lg font-semibold text-yellow-400 mb-2">
+                    Player Name <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    id="playerName"
+                    placeholder="Enter your player name"
+                    value={formData.playerName}
+                    onChange={handleInputChange}
+                    required
+                    className="w-full border-2 border-gray-300 rounded-lg px-4 py-3 text-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                  />
+                </div>
+
+                <div className="flex justify-center">
+                  <button
+                    type="submit"
+                    disabled={!isFormComplete || loading}
+                    style={pixelatedButtonStyle}
+                    onMouseEnter={(e) =>
+                      Object.assign(e.target.style, pixelatedButtonHoverStyle)
+                    }
+                    onMouseLeave={(e) =>
+                      Object.assign(e.target.style, pixelatedButtonStyle)
+                    }
+                    onMouseDown={(e) =>
+                      Object.assign(e.target.style, pixelatedButtonActiveStyle)
+                    }
+                    onMouseUp={(e) =>
+                      Object.assign(e.target.style, pixelatedButtonHoverStyle)
+                    }
+                    className="disabled:opacity-50 disabled:cursor-not-allowed">
+                    {loading ? "Submitting..." : "Submit"}
+                  </button>
+                </div>
+              </form>
             </div>
-
-            {/* Submit Button */}
-            <button
-              type="submit"
-              disabled={!isFormComplete}
-              className="w-full py-3 bg-blue-600 text-white rounded-lg text-lg font-semibold disabled:bg-gray-400"
-            >
-              {loading ? "Submitting..." : "Submit"}
-            </button>
-          </form>
+          </div>
         </div>
       )}
     </>

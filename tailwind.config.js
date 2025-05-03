@@ -18,6 +18,9 @@ module.exports = {
         'pixelify': ['"Pixelify Sans"', 'sans-serif'],
         'tiny': ['Tiny5', 'cursive'], // make sure Tiny5 is loaded via <link> in <head>
       },
+      colors: {
+        'custom-brown': '#EF835F', // Adding your custom color
+      },
     },
   },
   plugins: [],
