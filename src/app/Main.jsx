@@ -4,12 +4,9 @@ import { useEffect, useState, useCallback } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth, db } from '@/app/firebase/config';
 import { useRouter } from 'next/navigation';
-import { doc, getDoc } from 'firebase/firestore'; // Import getDoc instead of onSnapshot
+import { doc, getDoc } from 'firebase/firestore';
 import success from './success.wav';
-import SortingGame from './SortingGame';
-import Navbar from './Navbar'; // Import the refactored Navbar component
-import MainScreen from './MainScreen'; // Import the refactored Navbar component
-
+import MainScreen from './MainScreen'; // Import the refactored MainScreen component
 
 export default function Main() {
   const [user, loading, error] = useAuthState(auth);
@@ -18,7 +15,7 @@ export default function Main() {
   const [activeComponent, setActiveComponent] = useState('feed'); // Default to Feed
   const router = useRouter();
 
-  const handleUserCheck = useCallback(async () => { // Make the function async
+  const handleUserCheck = useCallback(async () => {
     if (!user) {
       router.push('/sign-in');
       return;
@@ -26,7 +23,7 @@ export default function Main() {
 
     const userDocRef = doc(db, 'users', user.uid);
     try {
-      const userDocSnapshot = await getDoc(userDocRef); // Use getDoc and await
+      const userDocSnapshot = await getDoc(userDocRef);
       if (userDocSnapshot.exists()) {
         const data = userDocSnapshot.data();
         setUserData(data);
@@ -43,7 +40,7 @@ export default function Main() {
 
     const postDocRef = doc(db, 'posts', 'posts');
     try {
-      const postDocSnapshot = await getDoc(postDocRef); // Use getDoc and await
+      const postDocSnapshot = await getDoc(postDocRef);
       if (postDocSnapshot.exists()) {
         const data = postDocSnapshot.data();
         setPostData(data);
@@ -52,8 +49,6 @@ export default function Main() {
       console.error('Error fetching post data:', err);
       // Optionally set an error state here
     }
-
-    // No need to return an unsubscribe function with getDoc
   }, [user, router]);
 
   useEffect(() => {
@@ -79,15 +74,10 @@ export default function Main() {
 
   return (
     <main className="min-h-screen bg-gray-100 relative">
-      {/* Navbar */}
-      {/* <Navbar activeComponent={activeComponent} setActiveComponent={setActiveComponent} /> */}
-
-      {/* Active Component */}
-      <section >{renderComponent()}</section>
+      <section>{renderComponent()}</section>
     </main>
   );
 }
-
 
 // 'use client';
 

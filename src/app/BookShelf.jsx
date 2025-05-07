@@ -3,8 +3,8 @@ import React from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import bookImages from "./BookImages";
-import shelfImage from "./Shelf.png";
-import Arrow from "./Arrow.gif";
+import shelfImage from ".//images/Shelf.png";
+import Arrow from ".//images/Arrow.gif";
 import BookItem from "./BookItem";
 
 const BookShelf = ({

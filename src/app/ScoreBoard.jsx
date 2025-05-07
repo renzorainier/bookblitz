@@ -1,7 +1,7 @@
 // components/Scoreboard.js
 import React from "react";
 import Image from "next/image";
-import emptyImage from "./empty.png";
+import emptyImage from ".//images/empty.png";
 
 const Scoreboard = ({ timeLeft, score, totalPlayTime }) => {
   const stats = [

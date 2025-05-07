@@ -1,22 +1,38 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import SortingGame from './SortingGame';
 import Leaderboard from './Leaderboard';
-import backgroundImage from './back.png';
-import simple from './simple.png';
+import backgroundImage from './/images/back.png';
+import simple from './/images/simple.png';
 import Image from 'next/image';
+import buttonClickSound from './/sounds/select.mp3'; // Import button click sound
 
 const MainScreen = ({ userData }) => {
   const [activeScreen, setActiveScreen] = useState(null);
+  const buttonClickSoundRef = useRef(null);
+
+  useEffect(() => {
+    buttonClickSoundRef.current = new Audio(buttonClickSound);
+  }, []);
+
+  const playClickSound = () => {
+    if (buttonClickSoundRef.current) {
+      buttonClickSoundRef.current.currentTime = 0; // Reset to the beginning for multiple quick clicks
+      buttonClickSoundRef.current.play().catch(error => console.error("Error playing button click sound:", error));
+    }
+  };
 
   const handlePlayClick = () => {
+    playClickSound();
     setActiveScreen('play');
   };
 
   const handleLeaderboardsClick = () => {
+    playClickSound();
     setActiveScreen('leaderboards');
   };
 
   const handleBackClick = () => {
+    playClickSound();
     setActiveScreen(null);
   };
 
@@ -30,6 +46,7 @@ const MainScreen = ({ userData }) => {
     transition: 'box-shadow 0.2s ease-in-out',
     fontSize: '1.5rem', // Increased font size
     border: '3px solid #b87729', // Increased border width
+    cursor: 'pointer', // Add cursor for better UX
   };
 
   const pixelatedButtonHoverStyle = {

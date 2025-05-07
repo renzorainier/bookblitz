@@ -21,30 +21,20 @@ const Register = () => {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
 
-      const playerName = user.displayName || "";
-
-      const userRef = doc(db, "users", user.uid);
-      await setDoc(
-        userRef,
-        {
-          playerName,
-          highScore: 0,
-          totalPlaytime: 0,
-          highScorePlaytime: 0,
-          userID: user.uid,
-        },
-        { merge: true }
-      );
-
-      alert("Registration complete! Welcome, " + playerName);
-      router.push("/");
+      // Display the form to get the player's name
+      setLoading(false);
+      // Set a state to indicate that the user is authenticated but needs to enter a player name
+      setIsGoogleSignInComplete(true);
+      setGoogleUser(user);
     } catch (error) {
       console.error("Google Sign-in Error:", error);
       alert("Error signing in with Google. Please try again.");
-    } finally {
       setLoading(false);
     }
   };
+
+  const [isGoogleSignInComplete, setIsGoogleSignInComplete] = useState(false);
+  const [googleUser, setGoogleUser] = useState(null);
 
   const handleInputChange = (e) => {
     const { id, value } = e.target;
@@ -79,6 +69,37 @@ const Register = () => {
     }
   };
 
+  const handleGoogleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      if (!googleUser) throw new Error("Google user data not available.");
+
+      const { playerName } = formData;
+
+      const userRef = doc(db, "users", googleUser.uid);
+      await setDoc(
+        userRef,
+        {
+          playerName,
+          highScore: 0,
+          totalPlaytime: 0,
+          highScorePlaytime: 0,
+          userID: googleUser.uid,
+        },
+        { merge: true }
+      );
+
+      alert("Registration complete! Welcome, " + playerName);
+      router.push("/");
+    } catch (error) {
+      console.error("Error completing Google registration: ", error);
+      alert("Error completing registration. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const isFormComplete = formData.playerName;
 
   const pixelatedButtonStyle = {
@@ -107,7 +128,7 @@ const Register = () => {
   return (
     <>
       {!auth.currentUser ? (
-        // Initial Google Sign-Up UI (unchanged)
+        // Initial Google Sign-Up UI
         <div
           className="min-h-screen flex flex-col items-center justify-center px-6 py-2 bg-repeat"
           style={{
@@ -140,7 +161,7 @@ const Register = () => {
               }
               className="w-[80vw] max-w-md flex items-center justify-center py-6 text-white border-gray-300 rounded-lg shadow-xl transform hover:scale-105 transition duration-200 ease-in-out text-lg font-bold"
               disabled={loading}>
-              {loading ? "Signing Up..." : "Sign up with Google"}
+              {loading ? "Signing In..." : "Sign up with Google"}
             </button>
           </div>
 
@@ -155,7 +176,7 @@ const Register = () => {
           </div>
         </div>
       ) : (
-        // After Google Sign-In — centered form inside Book Blitz logo
+        // After Google Sign-In, show the player name input form
         <div
           className="min-h-screen flex items-center justify-center px-4 py-8 bg-repeat"
           style={{
@@ -175,10 +196,10 @@ const Register = () => {
             {/* Form Centered Inside Logo Container */}
             <div className="absolute left-0 right-0 top-[35%] flex justify-center p-3">
               <form
-                onSubmit={handleSubmit}
+                onSubmit={isGoogleSignInComplete ? handleGoogleSubmit : handleSubmit}
                 className="w-full max-w-md bg-transparent shadow-none p-0 space-y-6">
                 <h2 className="text-4xl font-bold text-yellow-400 text-center mb-5">
-                  Sign Up
+                  {isGoogleSignInComplete ? "Complete Sign Up" : "Sign Up"}
                 </h2>
 
                 <div>

@@ -1,8 +1,8 @@
 // components/Lamp.js
 import React from "react";
 import Image from "next/image";
-import lampOnImage from "./lamp_on.png";
-import lampOffImage from "./lamp_off.png";
+import lampOnImage from ".//images/lamp_on.png";
+import lampOffImage from ".//images/lamp_off.png";
 
 const Lamp = ({ isOn, position }) => {
   const style =

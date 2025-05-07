@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { db } from "@/app/firebase/config";
 import { collection, getDocs, orderBy, query } from "firebase/firestore";
-import leaderboardBg from "./leaderboard.png";
+import leaderboardBg from ".//images/leaderboard.png";
 import Image from "next/image";
-import backgroundImage from "./back.png";
+import backgroundImage from ".//images/back.png";
 
 const Leaderboard = () => {
   const [leaderboardData, setLeaderboardData] = useState([]);
